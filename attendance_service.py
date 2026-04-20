@@ -11,7 +11,8 @@ def get_attendance_data(start=None, end=None):
             "$gte": start,
             "$lte": end
         }
-
+        
+    print("FILTER:", query)
     records = list(attendance_collection.find(query, {"_id": 0}))
 
     # summary calculation

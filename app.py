@@ -20,7 +20,14 @@ CORS(app)
 @app.route("/attendance", methods=["GET"])
 def attendance():
 
-    records, summary = get_attendance_data()
+    # records, summary 
+    start = request.args.get("start")
+    end = request.args.get("end")
+
+    print("API PARAMS:", start, end)
+
+    records, summary = get_attendance_data(start, end)
+
 
     return jsonify({
         "records": records,
