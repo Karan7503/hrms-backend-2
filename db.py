@@ -8,3 +8,6 @@ db = client["hrms"]
 
 # collection name
 attendance_collection = db["attendance"]
+
+# new collection for conference room bookings
+conference_collection = db["conference_bookings"]

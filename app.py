@@ -7,6 +7,7 @@ from request_service import get_requests, create_request
 
 from seed_requests import seed_requests
 
+from conference_service import get_slots, create_booking
 
 app = Flask(__name__)
 
@@ -61,6 +62,39 @@ def add_request():
     }
 
 
+
+# ------------------
+# conference api
+# ------------------
+
+@app.route("/conference/slots", methods=["GET"])
+def conference_slots():
+
+    room = request.args.get("room")
+    date = request.args.get("date")
+
+    slots = get_slots(room, date)
+
+    return {
+
+        "records": slots
+    }
+
+
+@app.route("/conference/book", methods=["POST"])
+def conference_book():
+
+    payload = request.json
+
+    result = create_booking(payload)
+
+
+    if result["success"] == False:
+
+        return jsonify(result), 400
+
+
+    return jsonify(result)
 
 # ------------------
 
