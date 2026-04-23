@@ -9,6 +9,8 @@ from seed_requests import seed_requests
 
 from conference_service import get_slots, create_booking
 
+from leave_service import get_leaves, create_leave
+
 app = Flask(__name__)
 
 CORS(app)
@@ -40,28 +42,45 @@ def attendance():
 # requests api
 # ------------------
 
+# @app.route("/requests", methods=["GET"])
+# def fetch_requests():
+
+#     return {
+#         "records": get_requests()
+#     }
+
+
+
+# @app.route("/requests", methods=["POST"])
+# def add_request():
+
+#     payload = request.json
+
+#     new_request = create_request(payload)
+
+#     return {
+#         "message": "created",
+#         "record": new_request
+#     }
+
+
 @app.route("/requests", methods=["GET"])
 def fetch_requests():
-
-    return {
+    return jsonify({
         "records": get_requests()
-    }
-
+    })
 
 
 @app.route("/requests", methods=["POST"])
 def add_request():
-
     payload = request.json
 
-    new_request = create_request(payload)
+    record = create_request(payload)
 
-    return {
+    return jsonify({
         "message": "created",
-        "record": new_request
-    }
-
-
+        "record": record
+    })
 
 # ------------------
 # conference api
@@ -95,6 +114,35 @@ def conference_book():
 
 
     return jsonify(result)
+
+
+# ------------------
+# leave api
+# ------------------
+
+@app.route("/leave", methods=["GET"])
+def fetch_leave():
+
+    records = get_leaves()
+
+    return jsonify({
+        "records": records
+    })
+
+
+@app.route("/leave", methods=["POST"])
+def add_leave():
+
+    payload = request.json
+
+    record = create_leave(payload)
+
+    return jsonify({
+        "message": "created",
+        "record": record
+    })
+
+
 
 # ------------------
 
