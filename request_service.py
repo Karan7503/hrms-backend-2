@@ -89,7 +89,10 @@ def create_request(payload):
         "close_date": payload.get("close_date"),
 
         "user_status": payload.get("user_status", "Open"),
-        "request_status": payload.get("request_status", "Pending"),
+        # "request_status": payload.get("request_status", "Pending"),
+
+        # default status- hardcoded for now
+        "request_status": "Pending",
 
         "report_to": payload.get("report_to"),
 
@@ -107,3 +110,45 @@ def create_request(payload):
     del record["_id"] 
 
     return record
+
+
+def update_request(id, payload):
+
+    updated = {
+        "request_for": payload.get("request_for"),
+        "subject": payload.get("subject"),
+        "comments": payload.get("comments"),
+        "open_date": payload.get("open_date"),
+        "close_date": payload.get("close_date"),
+        "user_status": payload.get("user_status"),
+        # "request_status": payload.get("request_status"),
+
+        "report_to": payload.get("report_to"),
+        "active": payload.get("active", True)
+    }
+
+    result = request_collection.update_one(
+        {"request_no": int(id)},
+        {"$set": updated}
+    )
+
+    if result.matched_count == 0:
+        return {"error": "Request not found"}
+
+    return {
+        "request_no": int(id),
+        **updated
+    }
+
+
+
+def delete_request(id):
+
+    result = request_collection.delete_one({
+        "request_no": int(id)
+    })
+
+    if result.deleted_count == 0:
+        return {"error": "Request not found"}
+
+    return {"message": "deleted"}

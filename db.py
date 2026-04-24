@@ -11,3 +11,6 @@ attendance_collection = db["attendance"]
 
 # new collection for conference room bookings
 conference_collection = db["conference_bookings"]
+
+# users
+users_collection = db["users"]

@@ -66,3 +66,59 @@ def create_leave(payload):
     del record["_id"] 
 
     return record
+
+
+def update_leave(id, payload):
+
+    leave_type = payload.get("leaveType")
+    from_date = payload.get("fromDate")
+    to_date = payload.get("toDate")
+    reason = payload.get("reason")
+
+    d1 = datetime.strptime(from_date, "%Y-%m-%d")
+    d2 = datetime.strptime(to_date, "%Y-%m-%d")
+
+    days = (d2 - d1).days + 1
+
+    updated = {
+        "leaveType": leave_type,
+        "fromDate": from_date,
+        "toDate": to_date,
+        "days": days,
+        "reason": reason
+    }
+
+    # Remove the ObjectId before returning it to the frontend
+    # del record["_id"] 
+    # leave_collection.update_one(
+    #     {"id": id},
+    #     {"$set": updated}
+    # )
+    
+
+    # return { "id": id, **updated }
+
+    result = leave_collection.update_one(
+        {"id": int(id)},
+        {"$set": updated}
+    )
+
+    if result.matched_count == 0:
+        return {"error": "Leave not found"}
+
+    return {
+        "id": int(id),
+        **updated
+    }
+
+
+def delete_leave(id):
+
+    result = leave_collection.delete_one({
+        "id": int(id)
+    })
+
+    if result.deleted_count == 0:
+        return {"error": "Leave not found"}
+
+    return {"message": "deleted"}
