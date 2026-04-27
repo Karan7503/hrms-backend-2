@@ -13,6 +13,10 @@ from conference_service import get_slots, create_booking
 
 from leave_service import get_leaves, create_leave, update_leave, delete_leave
 
+from resume_service import get_resume, save_resume
+
+from data_service import get_employee_data, save_employee_data
+
 app = Flask(__name__)
 
 CORS(app)
@@ -206,6 +210,46 @@ def remove_leave(id):
     result = delete_leave(id)
 
     return jsonify(result)
+
+
+# ------------------
+# resume api
+# ------------------
+
+@app.route("/resume", methods=["GET", "POST", "OPTIONS"])
+def handle_resume():
+    if request.method == "OPTIONS":
+        return jsonify({}), 200
+        
+    if request.method == "GET":
+        data = get_resume()
+        return jsonify(data)
+        
+    if request.method == "POST":
+        payload = request.json
+        result = save_resume(payload)
+        return jsonify({
+            "message": "Resume saved successfully",
+            "record": result
+        })
+
+# ------------------
+# employee data api
+# ------------------
+
+@app.route("/employee-data", methods=["GET", "POST", "OPTIONS"])
+def handle_employee_data():
+    if request.method == "OPTIONS":
+        return jsonify({}), 200
+
+    if request.method == "GET":
+        data = get_employee_data()
+        return jsonify(data)
+
+    if request.method == "POST":
+        payload = request.json
+        result = save_employee_data(payload)
+        return jsonify({"message": "Employee data saved successfully", "record": result})
 
 # ------------------
 
